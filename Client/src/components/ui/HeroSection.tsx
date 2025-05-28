@@ -2,7 +2,7 @@ import { Search } from "lucide-react";
 import { useState } from "react";
 import { Input } from "./input";
 import { Button } from "./button";
-import HeroImage from "@/assets/Hero.jpg";
+import HeroImage from "../assets/hero-image.png";
 import { useNavigate } from "react-router-dom";
 
 const HeroSection = () => {
