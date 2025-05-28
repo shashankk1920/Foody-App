@@ -2,8 +2,16 @@ import { Search } from "lucide-react";
 import { useState } from "react";
 import { Input } from "./input";
 import { Button } from "./button";
-import HeroImage from "../assets/hero-image.png";
+
+
 import { useNavigate } from "react-router-dom";
+
+// Import your hero image here (adjust the path as needed)
+import hero from "../../assets/hero.jpg";
+
+
+
+
 
 const HeroSection = () => {
   const [searchText, setSearchText] = useState<string>("");
@@ -36,7 +44,7 @@ const HeroSection = () => {
       </div>
       <div className="flex justify-center md:w-[30%] mr-10 hover:text-">
         <img
-          src={HeroImage}
+          src={hero}
           alt="Hero Section"
           className="object-cover w-full max-h-[300px] rounded-3xl opacity-95 transition-transform duration-500 ease-in-out transform hover:scale-110   "
         />
