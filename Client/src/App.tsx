@@ -1,161 +1,146 @@
-// import "./App.css";
-
+import React, { useEffect, Suspense } from "react";
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
+import { useUserStore } from "./store/useUserStore";
+import Loading from "./components/ui/Loading";
 
-import Signup from "./auth/Signup.tsx";
-import Login from "./auth/Login.tsx";
-import ForgotPassword from "./auth/ForgotPassword.tsx";
-import ResetPassword from "./auth/ResetPassword.tsx";
-import VerifyEmail from "./auth/VerifyEmail.tsx";
+// 🔁 Lazy-loaded components
+const Signup = React.lazy(() => import("./auth/Signup"));
+const Login = React.lazy(() => import("./auth/Login"));
+const ForgotPassword = React.lazy(() => import("./auth/ForgotPassword"));
+const ResetPassword = React.lazy(() => import("./auth/ResetPassword"));
+const VerifyEmail = React.lazy(() => import("./auth/VerifyEmail"));
 
-import HeroSection from "./components/ui/HeroSection.tsx";
-import MainLayout from "./layout/MainLayout.tsx";
-import Profile from "./components/Profile.tsx";
-import SearchPage from "./components/SearchPage.tsx";
-import ResturantDetails from "./components/ResturantDetails.tsx";
+const HeroSection = React.lazy(() => import("./components/ui/HeroSection"));
+const MainLayout = React.lazy(() => import("./layout/MainLayout"));
+const Profile = React.lazy(() => import("./components/Profile"));
+const SearchPage = React.lazy(() => import("./components/SearchPage"));
+const ResturantDetails = React.lazy(() => import("./components/ResturantDetails"));
+const Cart = React.lazy(() => import("./components/Cart"));
+const Restaurant = React.lazy(() => import("./admin/Restaurant"));
+const AddMenu = React.lazy(() => import("./admin/AddMenu"));
+const Order = React.lazy(() => import("./admin/Order"));
+const Succcess = React.lazy(() => import("./components/Succcess"));
+const PrivacyPolicy = React.lazy(() => import("./components/PrivacyPolicy"));
+const TermsOfService = React.lazy(() => import("./components/TermsOfService"));
+const ContactUs = React.lazy(() => import("./components/ContactUs"));
 
-import Cart from "./components/Cart.tsx";
-import Restaurant from "./admin/Restaurant.tsx";
-import AddMenu from "./admin/AddMenu.tsx";
-import Order from "./admin/Order.tsx";
-import Succcess from "./components/Succcess.tsx";
-import { useUserStore } from "./store/useUserStore.ts";
-import { useEffect } from "react";
-import Loading from "./components/ui/Loading.tsx";
-import PrivacyPolicy from "./components/PrivacyPolicy.tsx";
-import TermsOfService from "./components/TermsOfService.tsx";
-import ContactUs from "./components/ContactUs.tsx";
-
+// 🔐 Protected routes
 const ProtectedRoutes = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, user } = useUserStore();
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
-  if (!user?.isVerified) {
-    return <Navigate to="/verify-email" replace />;
-  }
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (!user?.isVerified) return <Navigate to="/verify-email" replace />;
   return children;
 };
 
 const AuthenticatedUser = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, user } = useUserStore();
-  if(isAuthenticated && user?.isVerified){
-    return <Navigate to="/" replace/>
-  }
+  if (isAuthenticated && user?.isVerified) return <Navigate to="/" replace />;
   return children;
 };
 
-const AdminRoute = ({children}:{children:React.ReactNode}) => {
-  const {user, isAuthenticated} = useUserStore();
-  if(!isAuthenticated){
-    return <Navigate to="/login" replace/>
-  }
-  if(!user?.admin){
-    return <Navigate to="/" replace/>
-  }
-
+const AdminRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user, isAuthenticated } = useUserStore();
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (!user?.admin) return <Navigate to="/" replace />;
   return children;
-}
+};
 
+// 🌐 App Router
 const appRouter = createBrowserRouter([
   {
-    path:"/",
-     element:<ProtectedRoutes><MainLayout/></ProtectedRoutes>,
-    // element:<MainLayout/>,
-   
-
-    children:[
-        // ...existing routes
-    {
-      path: "/privacy-policy",
-      element: <PrivacyPolicy />,
-    },
-    {
-      path: "/terms-of-service",
-      element: <TermsOfService />,
-    },
-    {
-      path: "/contact-us",
-      element: <ContactUs />,
-    },
+    path: "/",
+    element: (
+      <ProtectedRoutes>
+        <MainLayout />
+      </ProtectedRoutes>
+    ),
+    children: [
+      { path: "/", element: <HeroSection /> },
+      { path: "/privacy-policy", element: <PrivacyPolicy /> },
+      { path: "/terms-of-service", element: <TermsOfService /> },
+      { path: "/contact-us", element: <ContactUs /> },
+      { path: "/profile", element: <Profile /> },
+      { path: "/search/:text", element: <SearchPage /> },
+      { path: "/restaurant/:id", element: <ResturantDetails /> },
+      { path: "/cart", element: <Cart /> },
+      { path: "/order/status", element: <Succcess /> },
       {
-        path:"/",
-        element:<HeroSection/>,
+        path: "/admin/restaurant",
+        element: (
+          <AdminRoute>
+            <Restaurant />
+          </AdminRoute>
+        ),
       },
       {
-        path:"/profile",
-        element:<Profile/>,
+        path: "/admin/menu",
+        element: (
+          <AdminRoute>
+            <AddMenu />
+          </AdminRoute>
+        ),
       },
       {
-        path:"/search/:text",
-        element:<SearchPage/>,
+        path: "/admin/orders",
+        element: (
+          <AdminRoute>
+            <Order />
+          </AdminRoute>
+        ),
       },
-      {
-        path:"/restaurant/:id",
-        element:<ResturantDetails/>,
-      },
-      {
-        path:"/cart",
-        element:<Cart/>,
-      },
-      {
-        path:"/order/status",
-        element:<Succcess/>,
-      },
-      //From here admin services are also started so a user can become a admin and add or remove or remove a restaurant
-      {
-        path:"/admin/restaurant",
-        element:<AdminRoute><Restaurant/></AdminRoute>,
-      },
-      {
-        path:"/admin/menu",
-        element:<AdminRoute><AddMenu/></AdminRoute>,
-      },
-      {
-        path:"/admin/orders",
-        element:<AdminRoute><Order/></AdminRoute>,
-      },
-    ]
+    ],
   },
-    {
-      path:"/login",
-      element:<AuthenticatedUser><Login/></AuthenticatedUser>
-    },
-    {
-      path:"/signup",
-      element:  <AuthenticatedUser><Signup/></AuthenticatedUser>
-    },
-    {
-      path:"/forgot-password",
-      element:<AuthenticatedUser><ForgotPassword/></AuthenticatedUser>
-    },
-    {
-      path:"/reset-password",
-      element:<ResetPassword/>
-    },
-    {
-      path:"/verify-email",
-      element:<VerifyEmail/>
-    }
-  
-])
+  {
+    path: "/login",
+    element: (
+      <AuthenticatedUser>
+        <Login />
+      </AuthenticatedUser>
+    ),
+  },
+  {
+    path: "/signup",
+    element: (
+      <AuthenticatedUser>
+        <Signup />
+      </AuthenticatedUser>
+    ),
+  },
+  {
+    path: "/forgot-password",
+    element: (
+      <AuthenticatedUser>
+        <ForgotPassword />
+      </AuthenticatedUser>
+    ),
+  },
+  {
+    path: "/reset-password",
+    element: <ResetPassword />,
+  },
+  {
+    path: "/verify-email",
+    element: <VerifyEmail />,
+  },
+]);
 
+// 🌟 App Component
 function App() {
   const { checkAuthentication, isCheckingAuth } = useUserStore();
-  // checking auth every time when page is loaded
+
   useEffect(() => {
     checkAuthentication();
   }, [checkAuthentication]);
-  
+
   if (isCheckingAuth) return <Loading />;
-  
+
   return (
     <main>
-      <RouterProvider router={appRouter}></RouterProvider>
+      <Suspense fallback={<Loading />}>
+        <RouterProvider router={appRouter} />
+      </Suspense>
     </main>
   );
 }
-
 
 export default App;
