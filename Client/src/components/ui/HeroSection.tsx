@@ -4,6 +4,10 @@ import { Input } from "./input";
 import { Button } from "./button";
 
 
+
+
+
+
 import { useNavigate } from "react-router-dom";
 
 // Import your hero image here (adjust the path as needed)
@@ -44,11 +48,19 @@ const HeroSection = () => {
         </div>
       </div>
       <div className="flex justify-center md:w-[30%] mr-10 hover:text-">
+
        <img 
   src={hero} // Ensure the path is correct
   alt="Hero Section"
   className="object-cover w-full max-h-[300px] rounded-3xl opacity-95 transition-transform duration-500 ease-in-out transform hover:scale-110"
 />
+
+        <img
+src={hero}
+          alt="hero"
+          className="object-cover w-full max-h-[300px] rounded-3xl opacity-95 transition-transform duration-500 ease-in-out transform hover:scale-110   "
+        />
+
       </div>
     </div>
     </div>
