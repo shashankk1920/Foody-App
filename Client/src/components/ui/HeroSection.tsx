@@ -36,8 +36,8 @@ const HeroSection = () => {
       </div>
       <div className="flex justify-center md:w-[30%] mr-10 hover:text-">
         <img
-          src={HeroImage}
-          alt="Hero Section"
+src={hero}
+          alt="hero"
           className="object-cover w-full max-h-[300px] rounded-3xl opacity-95 transition-transform duration-500 ease-in-out transform hover:scale-110   "
         />
       </div>
