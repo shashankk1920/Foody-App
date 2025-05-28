@@ -46,6 +46,6 @@ app.use("*",(_,res) => {
 });
 // Start the server
 app.listen(PORT, () => {
-   connectDB();
+ connectDB();
     console.log(`Server listen at port ${PORT}`);
 });
