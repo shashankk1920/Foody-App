@@ -16,7 +16,6 @@ connectDB();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-
 const DIRNAME = path.resolve();
 
 // Default middlewares
@@ -27,7 +26,8 @@ app.use(cookieParser());
 
 // CORS configuration
 const corsOptions = {
-  origin: "http://localhost:5173",
+  // Change this to your frontend deployed URL in production
+  origin: process.env.FRONTEND_URL || "http://localhost:5173",
   credentials: true,
 };
 
@@ -38,14 +38,13 @@ app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/restaurant", restauntRoutes);
 app.use("/api/v1/menu", menuRoutes);
 app.use("/api/v1/order", orderRoute);
-//app.use("/api/v1", orderRoute);
 
-app.use(express.static(path.join(DIRNAME,"/Client/dist")));
-app.use("*",(_,res) => {
-    res.sendFile(path.resolve(DIRNAME, "Client","dist","index.html"));
+app.use(express.static(path.join(DIRNAME, "/Client/dist")));
+app.use("*", (_, res) => {
+  res.sendFile(path.resolve(DIRNAME, "Client", "dist", "index.html"));
 });
+
 // Start the server
 app.listen(PORT, () => {
- connectDB();
-    console.log(`Server listen at port ${PORT}`);
+  console.log(`Server listening at port ${PORT}`);
 });
