@@ -14,7 +14,7 @@ dotenv.config();
 connectDB();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = parseInt(process.env.PORT || "3000", 10);
 
 const DIRNAME = path.resolve();
 
@@ -45,6 +45,6 @@ app.use("*", (_, res) => {
 });
 
 // Start the server
-app.listen(PORT, () => {
-  console.log(`Server listening at port ${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server is running on 0.0.0.0:${PORT}`);
 });
