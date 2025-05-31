@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import http from "http";
 import connectDB from "./db/connectDB";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
@@ -15,6 +16,7 @@ connectDB();
 
 const app = express();
 const PORT = parseInt(process.env.PORT || "3000", 10);
+const server = http.createServer(app);
 
 const DIRNAME = path.resolve();
 
