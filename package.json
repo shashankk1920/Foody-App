@@ -4,10 +4,21 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+   
     "dev": "nodemon Server/index.ts",
-    "stripe": "stripe listen --forward-to localhost:8000/api/v1/order/webhook",
-    "build": "npm install && npm install --prefix Client && npm run build --prefix Client",
-    "start": "ts-node Server/index.ts"
+
+   
+    "build-client": "npm install --prefix Client && npm run build --prefix Client",
+
+    "build-server": "tsc",
+
+    
+    "build": "npm run build-server && npm run build-client",
+
+    "start": "node dist/Server/index.js",
+
+
+    "stripe": "stripe listen --forward-to localhost:8000/api/v1/order/webhook"
   },
   "keywords": [],
   "author": "",
