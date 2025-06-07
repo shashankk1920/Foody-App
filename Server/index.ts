@@ -15,8 +15,8 @@ dotenv.config();
 connectDB();
 
 const app = express();
-const PORT = parseInt(process.env.PORT || "3000", 10);
-const server = http.createServer(app);
+const PORT = parseInt(process.env.PORT || "10000", 10);
+// const server = http.createServer(app);
 
 const DIRNAME = path.resolve();
 
