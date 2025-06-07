@@ -15,24 +15,23 @@ dotenv.config();
 connectDB();
 
 const app = express();
-const PORT = parseInt(process.env.PORT || "10000", 10);
-// const server = http.createServer(app);
+const PORT = parseInt(process.env.PORT || "3000", 10);
+const server = http.createServer(app);
 
+// Use __dirname safely (CommonJS style works with current tsconfig)
 const DIRNAME = path.resolve();
 
-// Default middlewares
-app.use(bodyParser.json({ limit: '10mb' }));
-app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
+// Middlewares
+app.use(bodyParser.json({ limit: "10mb" }));
+app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" }));
 app.use(express.json());
 app.use(cookieParser());
 
-// CORS configuration
+// CORS
 const corsOptions = {
-  // Change this to your frontend deployed URL in production
   origin: process.env.FRONTEND_URL || "http://localhost:5173",
   credentials: true,
 };
-
 app.use(cors(corsOptions));
 
 // API routes
@@ -41,12 +40,12 @@ app.use("/api/v1/restaurant", restauntRoutes);
 app.use("/api/v1/menu", menuRoutes);
 app.use("/api/v1/order", orderRoute);
 
+// Serve frontend
 app.use(express.static(path.join(DIRNAME, "/Client/dist")));
 app.use("*", (_, res) => {
   res.sendFile(path.resolve(DIRNAME, "Client", "dist", "index.html"));
 });
-
-// Start the server
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server is running on 0.0.0.0:${PORT}`);
+// Start server
+server.listen(PORT, () => {
+  console.log(`✅ Server is running on http://localhost:${PORT}`);
 });
